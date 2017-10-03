@@ -37,6 +37,7 @@ class LinkedList
 	
 
 	def list_size
+		return 0 if @head.nil?
 		current = @head
 		list_size = 1
 		while current.next != nil
@@ -52,17 +53,6 @@ class LinkedList
 		return @head.value
 		
 	end
-	
-	def print_list
-		list_array = []
-		current = @head
-		while current != nil
-			list_array<<current.value
-			current = current.next
-		end
-		#list_array<<current.value #add last value as loop stops too early
-		puts list_array.inspect
-	end	
 
 	def tail
 		current = @head
@@ -115,35 +105,98 @@ class LinkedList
 				return false
 		end
 
+		def find(data)
+			return "Value not in list" if contains(data) == false
+			pointer = @head
+			size = list_size
+			size.times do |index|
+				return index if pointer.value == data
+				pointer = pointer.next 
+			end
+		end
+
+		def print_list
+		list_array = []
+		current = @head
+		while current != nil
+			list_array<<current.value
+			current = current.next
+		end
+		
+		puts list_array.inspect
+	end	
+
+	def to_s
+		return "nil" if list_size == 0
+		string = ""
+		size = list_size 
+		pointer = @head
+		size.times do |index|
+			string<<"(#{pointer.value}) -> "
+			pointer = pointer.next	
+		end
+		
+		string <<"nil"
+		return string	
+		
+	end
+
+	def insert_at(data, index)
+		if index == 0
+			prepend(data) 
+		elsif index > list_size
+			append(data)		
+		else
+			pointer = @head
+			(index - 1).times {pointer = pointer.next}
+			new_next = pointer.next
+			pointer.next = Node.new(data, new_next)
+
+		end 
+	end
+
+	def delete_at(index)
+		pointer = @head
+		if index >= list_size
+			puts "No entry at that index point"
+			return nil 
+		elsif index == 0
+				pointer.value = pointer.next.value
+				pointer.next = pointer.next.next	
+		else
+			(index - 1).times {pointer = pointer.next}
+			pointer.next = pointer.next.next
+		end	
+			
+	end
+
 end
-
+puts "Test of Linked List ++++++++++++++"
 test = LinkedList.new
-test.append(999)
+test.append("banana")
+test.prepend("apple")
+test.prepend("pear")
+test.prepend("orange")
+test.append("fig")
+test.append("watermelon")
+test.append("blueberry")
+test.append("onion")
+test.append("potato")
+test.prepend("carrot")
+test.print_list
+puts test.list_size
+puts "head #{test.head}"
+puts "tail #{test.tail}"
+puts "#{test.at(3)} is at point 3"
+test.pop 
+puts test.contains("watermelon")
+puts test.find("fig")
+puts test.to_s
+test.insert_at("strawberry", 6)
+test.insert_at("grapes", 0)
 
-test.prepend(44)
-test.prepend(40)
-test.prepend("opp")
-#test.print_list
-test.append(3)
-test.append(53)
-test.append(37)
-test.append(63)
-test.append(307)
-test.prepend(9)
-
 test.print_list
-#test.list_size
-#test.head
-#test.tail
-puts test.at(0)
-puts test.at(2)
-puts test.at(9)
-puts test.at(100)
-puts test.pop
+test.delete_at(0)
 test.print_list
-puts test.pop
+test.delete_at(5)
 test.print_list
-puts test.contains("opp")
-puts test.contains(7)
-puts test.contains(3)
-puts test.contains(37)
