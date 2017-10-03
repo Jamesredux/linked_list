@@ -1,32 +1,31 @@
 class Node 
 	attr_accessor :value, :next
 
-	def initialize(value, next_node=nil)
+	def initialize(value, next_node = nil)
 		@value = value
 		@next = next_node
 		
 	end
-	
-	
 end
 
 
 
 
 class LinkedList 
+
 	def initialize
 		@head = nil
 	end
 	
-	def append(value)
+	def append(val)
 		if @head.nil?
-			@head = Node.new(value)
+			@head = Node.new(val)
 		else
-			current = @head
-			while current.next != nil
-				current = current.next
+			node = @head
+			while node.next != nil
+				node = node.next
 			end	
-			current.next = Node.new(value)
+			node.next = Node.new(val)
 		end	
 	end
 
@@ -38,91 +37,87 @@ class LinkedList
 
 	def list_size
 		return 0 if @head.nil?
-		current = @head
+		node = @head
 		list_size = 1
-		while current.next != nil
-			current = current.next
-			list_size += 1
-			
+		while node.next != nil
+			node = node.next
+			list_size += 1	
 		end
-		return list_size
-
+			return list_size
 	end	
 
 	def head
 		return @head.value
-		
 	end
 
 	def tail
-		current = @head
-		while current.next != nil
-			current = current.next
+		node = @head
+		while node.next != nil
+			node = node.next
 		end
-		return current.value
+		return node.value
 	end
 
 	def at(index)
-		pointer = @head
+		node = @head
 		count = 0
-		max_size = self.list_size - 1	
+		max_size = list_size - 1	
 		if index == max_size 
-			return self.tail			
-		elsif index == count 
-			return self.head
+			return tail			
+		elsif index == 0
+			return head
 		else	
-			while count < index && pointer.next != nil
-				pointer = pointer.next
+			while count < index && node.next != nil
+				node = node.next
 				count +=  1
 			end	
-				if pointer.next.nil?
+				if node.next.nil?
 					print "No value at that index point"
 				else
-					return pointer.value	
+					return node.value	
 				end	
 			end
-		end
+	end
 
-		def pop
-			pointer = @head
-				while pointer.next
-					prev = pointer
-					pointer = pointer.next
-				end
-					prev.next = nil
-					popped = pointer.value
-					pointer = nil
-					return popped
-		end
+	def pop
+		node = @head
+			while node.next
+				prev = node
+				node = node.next
+			end
+				prev.next = nil
+				popped = node.value
+				node = nil
+				return popped
+	end
 
-		def contains(check_val)
-			pointer = @head
-			size = self.list_size
+	def contains(check_val)
+			node = @head
+			size = list_size
 			size.times do 
-				return true if pointer.value == check_val
-					pointer = pointer.next
+				return true if node.value == check_val
+					node = node.next
 			end
 				return false
-		end
+	end
 
-		def find(data)
+	def find(data)
 			return "Value not in list" if contains(data) == false
-			pointer = @head
+			node = @head
 			size = list_size
 			size.times do |index|
-				return index if pointer.value == data
-				pointer = pointer.next 
+				return index if node.value == data
+				node = node.next 
 			end
-		end
+	end
 
-		def print_list
+	def print_list
 		list_array = []
-		current = @head
-		while current != nil
-			list_array<<current.value
-			current = current.next
+		node = @head
+		while node != nil
+			list_array<<node.value
+			node = node.next
 		end
-		
 		puts list_array.inspect
 	end	
 
@@ -130,15 +125,14 @@ class LinkedList
 		return "nil" if list_size == 0
 		string = ""
 		size = list_size 
-		pointer = @head
+		node = @head
 		size.times do |index|
-			string<<"(#{pointer.value}) -> "
-			pointer = pointer.next	
+			string<<"(#{node.value}) -> "
+			node = node.next	
 		end
 		
 		string <<"nil"
 		return string	
-		
 	end
 
 	def insert_at(data, index)
@@ -147,31 +141,33 @@ class LinkedList
 		elsif index > list_size
 			append(data)		
 		else
-			pointer = @head
-			(index - 1).times {pointer = pointer.next}
-			new_next = pointer.next
-			pointer.next = Node.new(data, new_next)
-
+			node = @head
+			(index - 1).times {node = node.next}
+			new_next = node.next
+			node.next = Node.new(data, new_next)
 		end 
 	end
 
 	def delete_at(index)
-		pointer = @head
+		node = @head
 		if index >= list_size
 			puts "No entry at that index point"
 			return nil 
 		elsif index == 0
-				pointer.value = pointer.next.value
-				pointer.next = pointer.next.next	
+				node.value = node.next.value
+				node.next = node.next.next	
 		else
-			(index - 1).times {pointer = pointer.next}
-			pointer.next = pointer.next.next
-		end	
-			
+			(index - 1).times {node = node.next}
+			node.next = node.next.next
+		end			
 	end
 
 end
-puts "Test of Linked List ++++++++++++++"
+
+
+
+
+#### "Test of Linked List ++++++++++++++"###
 test = LinkedList.new
 test.append("banana")
 test.prepend("apple")
@@ -188,7 +184,7 @@ puts test.list_size
 puts "head #{test.head}"
 puts "tail #{test.tail}"
 puts "#{test.at(3)} is at point 3"
-test.pop 
+puts "#{test.pop} removed" 
 puts test.contains("watermelon")
 puts test.find("fig")
 puts test.to_s
